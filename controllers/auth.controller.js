@@ -16,7 +16,7 @@ async function signUp(req, res) {
         if (password.length < 9)
             return res
                 .status(400)
-                .json({ message: "Password must be at least 9 characters" });
+                .json({ message: "Password must be at least 9 characters." });
 
         const user = await User.create({
             username,
@@ -28,7 +28,13 @@ async function signUp(req, res) {
 
         res
             .status(201)
-            .json({ username: user.username, _id, createdAt, updatedAt });
+            .json({
+                username: user.username,
+                email: user.email,
+                _id,
+                createdAt,
+                updatedAt
+            });
     }
 
     catch (err) {
@@ -40,15 +46,21 @@ async function signUp(req, res) {
         }
 
         if (err.code === 11000) {
-            return res
-                .status(409)
-                .json({ message: "Username already exists" });
+            if (err.keyValue.email) {
+                return res.status(409)
+                    .json({ message: "Email address is already registered." });
+            }
+
+            if (err.keyValue.username) {
+                return res.status(409)
+                    .json({ message: "Username is already taken." });
+            }
         }
 
         console.log(err);
         return res
             .status(500)
-            .json({ message: "Internal Server Error" });
+            .json({ message: "An unexpected error occurred." });
     }
 
 }
@@ -109,7 +121,7 @@ async function signIn(req, res) {
 
         return res
             .status(500)
-            .json({ message: "Internal Server Error" });
+            .json({ message: "An unexpected error occurred." });
     }
 
 }
@@ -138,7 +150,7 @@ async function verifyUser(req, res) {
 
         return res
             .status(500)
-            .json({ message: "Internal Server Error" });
+            .json({ message: "An unexpected error occurred." });
     }
 }
 
