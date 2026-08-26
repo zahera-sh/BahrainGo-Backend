@@ -9,6 +9,7 @@ const cors = require("cors");
 // Routes Import
 const authRoutes = require("./routes/auth.routes");
 const challengeRoutes = require("./routes/challenge.routes");
+const inviteRoutes = require("./routes/invite.routes");
 
 
 // Middleware
@@ -24,6 +25,7 @@ app.use(morgan("dev"));
 // Routes
 app.use("/auth", authRoutes);
 app.use("/challenges", challengeRoutes);
+app.use("/invites", inviteRoutes);
 
 
 module.exports = app;

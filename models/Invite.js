@@ -26,8 +26,14 @@ const inviteSchema = new mongoose.Schema({
         default: false
     },
 
+    isRejected: {
+        type: Boolean,
+        default: false
+    },
+
     receivedAt: {
-        type: Date
+        type: Date,
+        default: Date.now
     },
 
     isDropped: {

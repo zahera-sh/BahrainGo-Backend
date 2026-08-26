@@ -117,7 +117,7 @@ async function deleteChallanenge(req, res) {
 
         res
             .status(200)
-            .json({ message: "Challenge deleted." })
+            .json({ message: "Challenge deleted." });
     }
 
     catch (err) {
