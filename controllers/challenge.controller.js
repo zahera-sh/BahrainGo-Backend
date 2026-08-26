@@ -1,5 +1,6 @@
 const Challenge = require("../models/Challenge");
 const User = require("../models/User");
+const Participant = require("../models/Participant");
 
 
 async function createChallenge(req, res) {
@@ -32,6 +33,11 @@ async function createChallenge(req, res) {
                 : false,
             reward,
             businessReward,
+        });
+
+        await Participant.create({
+            userId: req.user._id,
+            challengeId: createdChallenge._id
         });
 
         res

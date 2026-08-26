@@ -1,5 +1,6 @@
 const Challenge = require("../models/Challenge");
 const User = require("../models/User");
+const Participant = require("../models/Participant");
 const Invite = require("../models/Invite");
 
 
@@ -82,6 +83,12 @@ async function acceptInvite(req, res) {
         invite.isRejected = false;
 
         await invite.save();
+
+        await Participant.create({
+            userId: invite.invitee,
+            challengeId: invite.challenge
+        });
+
         res
             .status(200)
             .json(invite);
@@ -159,6 +166,12 @@ async function dropChallenge(req, res) {
         invite.isDropped = true;
 
         await invite.save();
+
+        await Participant.findOneAndDelete({
+            userId: invite.invitee,
+            challengeId: invite.challenge
+        });
+
         res
             .status(200)
             .json(invite);

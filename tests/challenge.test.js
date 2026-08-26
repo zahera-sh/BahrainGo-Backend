@@ -10,6 +10,7 @@ const app = require("../app");
 
 const User = require("../models/User");
 const Challenge = require("../models/Challenge");
+const Participant = require("../models/Participant");
 
 
 beforeAll(async () => {
@@ -20,6 +21,7 @@ beforeAll(async () => {
 afterEach(async () => {
     await User.deleteMany({});
     await Challenge.deleteMany({});
+    await Participant.deleteMany({});
 });
 
 
@@ -100,6 +102,25 @@ describe("Challenge Routes", () => {
             expect(response.body.isPublic)
                 .toBe(false);
 
+            const participant = await Participant.findOne({
+                userId: user._id,
+                challengeId: response.body._id
+            });
+
+            expect(participant).not.toBeNull();
+
+            expect(participant.userId.toString())
+                .toBe(user._id.toString());
+
+            expect(participant.challengeId.toString())
+                .toBe(response.body._id.toString());
+
+            expect(participant.progress)
+                .toBe(0);
+
+            expect(participant.isComplete)
+                .toBe(false);
+                
         });
 
 

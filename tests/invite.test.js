@@ -12,6 +12,7 @@ const app = require("../app");
 const User = require("../models/User");
 const Challenge = require("../models/Challenge");
 const Invite = require("../models/Invite");
+const Participant = require("../models/Participant");
 
 
 beforeAll(async () => {
@@ -23,6 +24,7 @@ afterEach(async () => {
     await User.deleteMany({});
     await Challenge.deleteMany({});
     await Invite.deleteMany({});
+    await Participant.deleteMany({});
 });
 
 
@@ -219,6 +221,19 @@ describe("Invite Routes", () => {
 
             expect(response.body.isRejected)
                 .toBe(false);
+
+            const participant = await Participant.findOne({
+                userId: invitee._id,
+                challengeId: challenge._id
+            });
+
+            expect(participant).not.toBeNull();
+
+            expect(participant.userId.toString())
+                .toBe(invitee._id.toString());
+
+            expect(participant.challengeId.toString())
+                .toBe(challenge._id.toString());
         });
 
 
@@ -356,6 +371,11 @@ describe("Invite Routes", () => {
                 isAccepted: true
             });
 
+            await Participant.create({
+                userId: invitee._id,
+                challengeId: challenge._id
+            });
+
             const token = jwt.sign(
                 {
                     _id: invitee._id,
@@ -375,6 +395,13 @@ describe("Invite Routes", () => {
 
             expect(response.body.isDropped)
                 .toBe(true);
+
+            const participant = await Participant.findOne({
+                userId: invitee._id,
+                challengeId: challenge._id
+            });
+
+            expect(participant).toBeNull();
         });
 
     });
