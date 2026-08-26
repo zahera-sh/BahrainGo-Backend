@@ -24,7 +24,7 @@ const challengeSchema = new mongoose.Schema({
         type: String,
         required: true,
         trim: true,
-        minLength: 100
+        minLength: 30
     },
 
     photo: {
@@ -40,10 +40,6 @@ const challengeSchema = new mongoose.Schema({
         type: Number,
         default: 1,
         min: 1
-    },
-
-    createTime: {
-        type: Date,
     },
 
     startTime: {
@@ -68,6 +64,11 @@ const challengeSchema = new mongoose.Schema({
     businessReward: {
         type: String,
         trim: true
+    },
+
+    isDeleted: {
+        type: Boolean,
+        default: false
     }
 
 }, { timestamps: true });

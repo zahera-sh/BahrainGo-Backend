@@ -25,7 +25,7 @@ const reportSchema = new mongoose.Schema({
             "Privacy or Personal Information",
             "Fraud or Scam",
             "Reward Not Provided",
-            "Reward or Challange Misrepresentation",
+            "Reward or Challenge Misrepresentation",
             "Violation of Terms of Service",
             "Spam or Misleading Content",
             "Other"

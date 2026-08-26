@@ -39,6 +39,7 @@ async function signUp(req, res) {
 
     catch (err) {
         console.log(err);
+        
         if (err.name === "ValidationError") {
             return res
                 .status(400)
