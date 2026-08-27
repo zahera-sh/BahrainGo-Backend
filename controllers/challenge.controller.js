@@ -136,9 +136,44 @@ async function deleteChallanenge(req, res) {
 
 }
 
+async function getChallengeById(req, res) {
+
+    try {
+        const challenge = await Challenge.findOne({ _id: req.params.id, isDeleted: false })
+            .populate("creator");
+
+        if (!challenge) {
+            return res
+                .status(404)
+                .json({ message: "Challenge not found." });
+        }
+
+        if (!challenge.isPublic &&
+            challenge.creator._id.toString() !== req.user._id.toString()) {
+            return res
+                .status(403)
+                .json({ message: "Unauthorized action." });
+        }
+
+        res
+            .status(200)
+            .json(challenge);
+    }
+
+    catch (err) {
+        console.log(err);
+
+        return res
+            .status(500)
+            .json({ message: err.message });
+    }
+
+}
+
 module.exports = {
     createChallenge,
     getPublicChallenges,
     getMyChallenges,
     deleteChallanenge,
+    getChallengeById,
 };
