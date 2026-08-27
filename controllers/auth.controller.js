@@ -39,7 +39,7 @@ async function signUp(req, res) {
 
     catch (err) {
         console.log(err);
-        
+
         if (err.name === "ValidationError") {
             return res
                 .status(400)
@@ -143,6 +143,10 @@ async function verifyUser(req, res) {
             .json({
                 _id: user._id,
                 username: user.username,
+                email: user.email,
+                role: user.role,
+                points: user.points,
+                badges: user.badges
             });
     }
 
