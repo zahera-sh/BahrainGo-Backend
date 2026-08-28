@@ -9,7 +9,7 @@ async function createChallenge(req, res) {
         const {
             type,
             description,
-            photo,
+            // photo,
             isMeasurable,
             goal,
             startTime,
@@ -23,7 +23,7 @@ async function createChallenge(req, res) {
             creator: req.user._id,
             type,
             description,
-            photo,
+            // photo,
             isMeasurable,
             goal,
             startTime,

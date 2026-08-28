@@ -12,9 +12,17 @@ async function createInvite(req, res) {
             challenge
         } = req.body;
 
+        const user = await User.findOne({ username: invitee });
+
+        if (!user) {
+            return res
+                .status(404)
+                .json({ message: "User not found" });
+        }
+
         const createdInvite = await Invite.create({
             inviter: req.user._id,
-            invitee,
+            invitee: user._id,
             challenge
         });
 

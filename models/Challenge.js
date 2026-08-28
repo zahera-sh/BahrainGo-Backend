@@ -24,12 +24,12 @@ const challengeSchema = new mongoose.Schema({
         type: String,
         required: true,
         trim: true,
-        minLength: 30
+        minLength: 10
     },
 
-    photo: {
-        type: String
-    },
+    // photo: {
+    //     type: String
+    // },
 
     isMeasurable: {
         type: Boolean,
@@ -69,7 +69,17 @@ const challengeSchema = new mongoose.Schema({
     isDeleted: {
         type: Boolean,
         default: false
-    }
+    },
+
+    status: {
+        type: String,
+        enum: [
+            "Statring Soon", "Ended", "Deleted",
+            "Completed", "Dropped", "Accepted",
+            "Rejected", "New"
+        ],
+        default: "New"
+    },
 
 }, { timestamps: true });
 
