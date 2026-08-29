@@ -87,6 +87,24 @@ async function acceptInvite(req, res) {
                 .json({ message: "Unauthorized action." });
         }
 
+        if (invite.isAccepted) {
+            return res
+                .status(400)
+                .json({ message: "Invite has already been accepted." });
+        }
+
+        if (invite.isRejected) {
+            return res
+                .status(400)
+                .json({ message: "Invite has already been rejected." });
+        }
+
+        if (invite.isDropped) {
+            return res
+                .status(400)
+                .json({ message: "Invite has already been dropped." });
+        }
+
         invite.isAccepted = true;
         invite.isRejected = false;
 
@@ -127,6 +145,24 @@ async function rejectInvite(req, res) {
             return res
                 .status(403)
                 .json({ message: "Unauthorized action." });
+        }
+
+        if (invite.isAccepted) {
+            return res
+                .status(400)
+                .json({ message: "Invite has already been accepted." });
+        }
+
+        if (invite.isRejected) {
+            return res
+                .status(400)
+                .json({ message: "Invite has already been rejected." });
+        }
+
+        if (invite.isDropped) {
+            return res
+                .status(400)
+                .json({ message: "Invite has already been dropped." });
         }
 
         invite.isRejected = true;
