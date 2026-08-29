@@ -148,11 +148,20 @@ async function getChallengeById(req, res) {
                 .json({ message: "Challenge not found." });
         }
 
-        if (!challenge.isPublic &&
-            challenge.creator._id.toString() !== req.user._id.toString()) {
-            return res
-                .status(403)
-                .json({ message: "Unauthorized action." });
+        if (!challenge.isPublic) {
+
+            const isCreator = challenge.creator._id.toString() === req.user._id.toString();
+
+            const isParticipant = await Participant.exists({
+                challengeId: challenge._id,
+                userId: req.user._id
+            });
+
+            if (!isCreator && !isParticipant) {
+                return res
+                    .status(403)
+                    .json({ message: "Unauthorized action." });
+            }
         }
 
         res
@@ -169,6 +178,7 @@ async function getChallengeById(req, res) {
     }
 
 }
+
 
 module.exports = {
     createChallenge,

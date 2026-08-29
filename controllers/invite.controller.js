@@ -17,7 +17,24 @@ async function createInvite(req, res) {
         if (!user) {
             return res
                 .status(404)
-                .json({ message: "User not found" });
+                .json({ message: "User not found." });
+        }
+
+        if (user._id.toString() === req.user._id.toString()) {
+            return res
+                .status(400)
+                .json({ message: "You cannot invite yourself." });
+        }
+
+        const existingInvite = await Invite.findOne({
+            challenge,
+            invitee: user._id
+        });
+
+        if (existingInvite) {
+            return res
+                .status(400)
+                .json({ message: "This user has already been invited to this challenge." });
         }
 
         const createdInvite = await Invite.create({
@@ -230,6 +247,7 @@ async function dropChallenge(req, res) {
     }
 
 }
+
 
 module.exports = {
     createInvite,
