@@ -7,7 +7,12 @@ async function getMyParticipants(req, res) {
 
     try {
         const myParticipants = await Participant.find({ userId: req.user._id })
-            .populate("challengeId")
+            .populate({
+                path: "challengeId",
+                populate: {
+                    path: "creator"
+                }
+            })
             .populate("userId");
 
         res
