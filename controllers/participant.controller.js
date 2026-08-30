@@ -60,7 +60,7 @@ async function getParticipants(req, res) {
 async function updateProgress(req, res) {
 
     try {
-        const { progress, completeAt } = req.body;
+        const { progress } = req.body;
 
         const challenge = await Challenge.findById(req.params.id);
 
@@ -70,30 +70,36 @@ async function updateProgress(req, res) {
                 .json({ message: "Challenge not found." });
         }
 
-        const isComplete = progress >= challenge.goal;
-
-        const updateData = {
-            progress,
-            isComplete,
-            completeAt
-        };
-
-        if (isComplete) {
-            updateData.completeAt = new Date();
-        }
-
-        const participant = await Participant.findOneAndUpdate({
+        const participant = await Participant.findOne({
             userId: req.user._id,
             challengeId: req.params.id
-        },
-            updateData
-        );
+        });
 
         if (!participant) {
             return res
                 .status(404)
                 .json({ message: "Participant not found." });
         }
+
+        const isComplete = progress >= challenge.goal;
+
+        if (isComplete && !participant.isComplete) {
+
+            const user = await User.findById(req.user._id);
+
+            user.points += challenge.reward;
+
+            await user.save();
+        }
+
+        participant.progress = progress;
+        participant.isComplete = isComplete;
+
+        if (isComplete) {
+            participant.completeAt = new Date();
+        }
+
+        await participant.save();
 
         res
             .status(200)

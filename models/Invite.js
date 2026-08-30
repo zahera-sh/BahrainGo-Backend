@@ -43,6 +43,11 @@ const inviteSchema = new mongoose.Schema({
 
 }, { timestamps: true });
 
+inviteSchema.index(
+    { challenge: 1, invitee: 1 },
+    { unique: true }
+);
+
 
 const Invite = mongoose.model("Invite", inviteSchema);
 module.exports = Invite;

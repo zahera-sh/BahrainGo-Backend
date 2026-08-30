@@ -36,10 +36,10 @@ const userSchema = new mongoose.Schema({
         min: 0
     },
 
-    badges: {
+    badges: [{
         type: mongoose.Schema.Types.ObjectId,
         ref: "Badge",
-    }
+    }]
 
 }, { timestamps: true });
 
