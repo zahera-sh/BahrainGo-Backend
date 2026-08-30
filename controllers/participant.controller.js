@@ -34,7 +34,12 @@ async function getParticipants(req, res) {
 
     try {
         const participants = await Participant.find({ challengeId: req.params.id })
-            .populate("challengeId")
+            .populate({
+                path: "challengeId",
+                populate: {
+                    path: "goal"
+                }
+            })
             .populate("userId");
 
         res
@@ -52,8 +57,62 @@ async function getParticipants(req, res) {
 
 }
 
+async function updateProgress(req, res) {
+
+    try {
+        const { progress, completeAt } = req.body;
+
+        const challenge = await Challenge.findById(req.params.id);
+
+        if (!challenge) {
+            return res
+                .status(404)
+                .json({ message: "Challenge not found." });
+        }
+
+        const isComplete = progress >= challenge.goal;
+
+        const updateData = {
+            progress,
+            isComplete,
+            completeAt
+        };
+
+        if (isComplete) {
+            updateData.completeAt = new Date();
+        }
+
+        const participant = await Participant.findOneAndUpdate({
+            userId: req.user._id,
+            challengeId: req.params.id
+        },
+            updateData
+        );
+
+        if (!participant) {
+            return res
+                .status(404)
+                .json({ message: "Participant not found." });
+        }
+
+        res
+            .status(200)
+            .json(participant);
+    }
+
+    catch (err) {
+        console.log(err);
+
+        return res
+            .status(500)
+            .json({ message: err.message });
+    }
+
+}
+
 
 module.exports = {
     getMyParticipants,
     getParticipants,
+    updateProgress
 };

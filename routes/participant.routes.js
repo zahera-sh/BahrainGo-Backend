@@ -5,6 +5,7 @@ const participantController = require("../controllers/participant.controller");
 
 router.get("/my-participants", verifyToken, participantController.getMyParticipants);
 router.get("/:id", verifyToken, participantController.getParticipants);
+router.put("/:id", verifyToken, participantController.updateProgress);
 
 
 module.exports = router;
