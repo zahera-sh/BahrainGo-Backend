@@ -103,7 +103,7 @@ async function getMyChallenges(req, res) {
 
 }
 
-async function deleteChallanenge(req, res) {
+async function deleteChallenge(req, res) {
 
     try {
         const challenge = await Challenge.findById(req.params.id);
@@ -186,6 +186,6 @@ module.exports = {
     createChallenge,
     getPublicChallenges,
     getMyChallenges,
-    deleteChallanenge,
+    deleteChallenge,
     getChallengeById,
 };

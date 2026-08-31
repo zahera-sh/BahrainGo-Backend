@@ -229,38 +229,29 @@ async function rejectInvite(req, res) {
 async function dropChallenge(req, res) {
 
     try {
-        const invite = await Invite.findById(req.params.id);
+        const participant = await Participant.findOne({
+            userId: req.user._id,
+            challengeId: req.params.id
+        });
 
-        if (!invite) {
+        if (!participant) {
             return res
                 .status(404)
-                .json({ message: "Invite not found." });
+                .json({ message: "You are not a participant in this challenge." });
         }
 
-        if (invite.invitee.toString() !== req.user._id.toString()) {
-            return res
-                .status(403)
-                .json({ message: "Unauthorized action." });
-        }
+        await Participant.findByIdAndDelete(participant._id);
 
-        if (!invite.isAccepted) {
-            return res
-                .status(400)
-                .json({ message: "You must accept the challenge before dropping it.." });
-        }
-
-        invite.isDropped = true;
-
-        await invite.save();
-
-        await Participant.findOneAndDelete({
-            userId: invite.invitee,
-            challengeId: invite.challenge
-        });
+        await Invite.findOneAndUpdate({
+            invitee: req.user._id,
+            challenge: req.params.id,
+            isAccepted: true
+        }, { isDropped: true }
+        )
 
         res
             .status(200)
-            .json(invite);
+            .json({ message: "You have dropped the challenge." });
     }
 
     catch (err) {
