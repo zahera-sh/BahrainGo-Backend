@@ -35,10 +35,12 @@ async function createChallenge(req, res) {
             businessReward,
         });
 
-        await Participant.create({
-            userId: req.user._id,
-            challengeId: createdChallenge._id
-        });
+        if (req.user.role === "user") {
+            await Participant.create({
+                userId: req.user._id,
+                challengeId: createdChallenge._id
+            });
+        }
 
         res
             .status(201)

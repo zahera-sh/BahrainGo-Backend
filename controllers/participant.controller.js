@@ -116,9 +116,69 @@ async function updateProgress(req, res) {
 
 }
 
+async function joinChallenge(req, res) {
+
+    try {
+        const challenge = await Challenge.findOne({ _id: req.params.id, isDeleted: false });
+
+        if (!challenge) {
+            return res
+                .status(404)
+                .json({ message: "Challenge not found." });
+        }
+
+        if (!challenge.isPublic) {
+            return res
+                .status(403)
+                .json({ message: "This is a private challenge." });
+        }
+
+        if (req.user.role !== "user") {
+            return res
+                .status(403)
+                .json({ message: "Only users can join challenges." });
+        }
+
+        if (challenge.creator.toString() === req.user._id.toString()) {
+            return res
+                .status(400)
+                .json({ message: "You cannot join your own challenge." });
+        }
+
+        const existingParticipant = await Participant.findOne({
+            challengeId: challenge._id,
+            userId: req.user._id
+        });
+
+        if (existingParticipant) {
+            return res
+                .status(400)
+                .json({ message: "You already joined this challenge." });
+        }
+
+        const participant = await Participant.create({
+            challengeId: challenge._id,
+            userId: req.user._id
+        });
+
+        res
+            .status(201)
+            .json(participant);
+    }
+
+    catch (err) {
+        console.log(err);
+
+        res
+            .status(500)
+            .json({ message: err.message });
+    }
+}
+
 
 module.exports = {
     getMyParticipants,
     getParticipants,
-    updateProgress
+    updateProgress,
+    joinChallenge
 };

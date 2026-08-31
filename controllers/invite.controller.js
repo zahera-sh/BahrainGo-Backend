@@ -20,16 +20,41 @@ async function createInvite(req, res) {
                 .json({ message: "User not found." });
         }
 
+        if (user.role !== "user") {
+            return res
+                .status(403)
+                .json({ message: "Admin or Businesses cannot be invited to challenges." });
+        }
+
         if (user._id.toString() === req.user._id.toString()) {
             return res
                 .status(400)
                 .json({ message: "You cannot invite yourself." });
         }
 
-        const existingInvite = await Invite.findOne({
-            challenge,
-            invitee: user._id
-        });
+        const challengeData = await Challenge.findOne({ _id: challenge, isDeleted: false });
+
+        if (!challengeData) {
+            return res
+                .status(404)
+                .json({ message: "Challenge not found." });
+        }
+
+        if (challengeData.creator.toString() !== req.user._id.toString()) {
+            return res
+                .status(403)
+                .json({ message: "Only the challenge creator can send invitations." });
+        }
+
+        const existingParticipant = await Participant.findOne({ challengeId: challenge, userId: user._id });
+
+        if (existingParticipant) {
+            return res
+                .status(400)
+                .json({ message: "This user is already a participant." });
+        }
+
+        const existingInvite = await Invite.findOne({ challenge, invitee: user._id });
 
         if (existingInvite) {
             return res
