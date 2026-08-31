@@ -28,7 +28,17 @@ const participantSchema = new mongoose.Schema({
 
     completeAt: {
         type: Date
-    }
+    },
+
+    logs: [{
+        comment: {
+            type: String
+        },
+        createdAt: {
+            type: Date,
+            default: Date.now
+        }
+    }]
 
 }, { timestamps: true });
 

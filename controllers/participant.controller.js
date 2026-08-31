@@ -60,7 +60,7 @@ async function getParticipants(req, res) {
 async function updateProgress(req, res) {
 
     try {
-        const { progress } = req.body;
+        const { progress, comment } = req.body;
 
         const challenge = await Challenge.findById(req.params.id);
 
@@ -94,6 +94,13 @@ async function updateProgress(req, res) {
 
         participant.progress = progress;
         participant.isComplete = isComplete;
+
+        if (comment) {
+            participant.logs.push({
+                comment,
+                createdAt: new Date()
+            });
+        }
 
         if (isComplete) {
             participant.completeAt = new Date();
