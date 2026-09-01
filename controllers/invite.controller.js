@@ -246,8 +246,10 @@ async function dropChallenge(req, res) {
             invitee: req.user._id,
             challenge: req.params.id,
             isAccepted: true
-        }, { isDropped: true }
-        )
+        }, {
+            isDropped: true,
+            isAccepted: false
+        })
 
         res
             .status(200)
