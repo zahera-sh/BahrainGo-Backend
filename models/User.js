@@ -39,7 +39,12 @@ const userSchema = new mongoose.Schema({
     badges: [{
         type: mongoose.Schema.Types.ObjectId,
         ref: "Badge",
-    }]
+    }],
+
+    isDeleted: {
+        type: Boolean,
+        default: false
+    }
 
 }, { timestamps: true });
 

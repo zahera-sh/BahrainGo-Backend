@@ -146,7 +146,9 @@ async function verifyUser(req, res) {
                 email: user.email,
                 role: user.role,
                 points: user.points,
-                badges: user.badges
+                badges: user.badges,
+                createdAt: user.createdAt
+
             });
     }
 

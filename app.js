@@ -12,6 +12,7 @@ const challengeRoutes = require("./routes/challenge.routes");
 const inviteRoutes = require("./routes/invite.routes");
 const participantRoutes = require("./routes/participant.routes");
 const reportRoutes = require("./routes/report.routes");
+const adminRouter = require("./routes/admin.routes");
 
 
 // Middleware
@@ -30,6 +31,7 @@ app.use("/challenges", challengeRoutes);
 app.use("/invites", inviteRoutes);
 app.use("/participants", participantRoutes);
 app.use("/reports", reportRoutes);
+app.use("/admin", adminRouter);
 
 
 module.exports = app;
